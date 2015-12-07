@@ -1,5 +1,6 @@
 package br.com.gdgfoz.apirest.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,10 +10,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.gdgfoz.apirest.Utils;
 import br.com.gdgfoz.apirest.adapters.PersonAdapter;
 import br.com.gdgfoz.apirest.api.PersonApi;
 import br.com.gdgfoz.apirest.models.Person;
@@ -23,7 +26,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PersonAdapter.PersonClickListener {
 
     private LinearLayoutManager mLayoutManager;
     private RecyclerView listPerson;
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         listPerson = (RecyclerView) findViewById(R.id.list_person);
 
-        personAdapter = new PersonAdapter(this, new ArrayList<Person>());
+        personAdapter = new PersonAdapter(this, new ArrayList<Person>(), this);
 
         setRecyclerView();
 
@@ -88,4 +91,18 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void personClicked(Person person) {
+        Log.d("person clicked", person.getNome() );
+
+        Intent mIntent = new Intent(this, PersonShowActivity.class);
+        Bundle bundle = new Bundle();
+
+        bundle.putSerializable(Utils.PERSON_KEY, person);
+
+        mIntent.putExtras(bundle);
+        startActivity(mIntent);
+    }
+
 }
